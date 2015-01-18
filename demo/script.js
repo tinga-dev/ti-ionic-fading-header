@@ -12,7 +12,8 @@ angular.module('App', ['ionic', 'tiNavBar'])
                 url: "/home",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/home.html"
+                        templateUrl: "templates/home.html",
+                        controller: "HomeCtrl"
                     }
                 }
             })
@@ -37,9 +38,16 @@ angular.module('App', ['ionic', 'tiNavBar'])
 
         $urlRouterProvider.otherwise("/app/home");
     })
+    .controller('HomeCtrl', function ($scope, tiNavBarDelegate) {
+        $scope.$on('$ionicView.enter', function () {
+            tiNavBarDelegate.makeNavBarTransparent();
+        });
+    })
 
-    .controller('FadeInCtrl', function ($scope) {
-
+    .controller('FadeInCtrl', function ($scope, tiNavBarDelegate) {
+        $scope.$on('$ionicView.enter', function () {
+            tiNavBarDelegate.makeNavBarTransparent();
+        });
     })
 
     .controller('MoreCtrl', function ($scope) {
