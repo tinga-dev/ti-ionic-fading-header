@@ -1,3 +1,17 @@
 body {
     cursor: url('http://ionicframework.com/img/finger.png'), auto;
 }
+
+.background-image {
+    height: 200vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.header-image{
+    height: 200px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}

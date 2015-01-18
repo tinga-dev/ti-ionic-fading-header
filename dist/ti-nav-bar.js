@@ -1,18 +1,28 @@
-/**
- *
- */
 angular.module('tiNavBar', ['ionic'])
-    .directive('tiTransparentNavBar', function (tiNavBarDelegate) {
+
+    .directive('tiTransparentNavBar', function (tiNavBarDelegate, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $element, $attr) {
                 $element.css({top: 0});
                 tiNavBarDelegate.makeNavBarTransparent();
+
+                $rootScope.$on('$stateChangeStart', function (event, toState) {
+                    if (toState.name != $attr.stateName) {
+                        tiNavBarDelegate.resetNavBar();
+                    }
+                });
+
+                $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+                    if (toState.name == $attr.stateName) {
+                        tiNavBarDelegate.makeNavBarTransparent();
+                    }
+                });
             }
         }
     })
 
-    .directive('tiFadeInNavBarOnScroll', function (tiNavBarDelegate) {
+    .directive('tiFadeInNavBarOnScroll', function (tiNavBarDelegate, $rootScope) {
         return {
             restrict: 'A',
             link: function ($scope, $element, $attr) {
@@ -28,12 +38,9 @@ angular.module('tiNavBar', ['ionic'])
                         handleNavBarFade(scrollTop);
                     } else {
                         ionic.requestAnimationFrame(function () {
-                            //navbar.css({opacity: 1});
-                            //buttons.css({color: themeColor});
                             tiNavBarDelegate.resetNavBar();
                         });
                     }
-
                 }
 
                 $element.bind('scroll', onScroll);
@@ -47,35 +54,41 @@ angular.module('tiNavBar', ['ionic'])
                     } else {
                         opacity = 1;
                     }
+                    setOpacityToNavBar();
+                }
 
+                function setOpacityToNavBar() {
                     ionic.requestAnimationFrame(function () {
-                        // TODO: if we want to change button color in animation
-                        //if (opacity >= 0.7) {
-                        //    buttons.css({color: themeColor});
-                        //} else if (opacity < 0.7) {
-                        //    buttons.css({color: whiteColor});
-                        //}
-                        // TODO: only fade bg color, with correct colors
                         for (var i = 0; i < navbars.length; i++) {
                             var header = angular.element(navbars[i]);
                             header.css({
                                 borderColor: 'rgba(' + targetRgbs[0] + ', ' + targetRgbs[1] + ', ' + targetRgbs[2] + ', ' + opacity + ')',
                                 backgroundColor: 'rgba(' + targetRgbs[0] + ', ' + targetRgbs[1] + ', ' + targetRgbs[2] + ', ' + opacity + ')'
                             })
-                            //header.css({opacity: opacity});
                         }
                     });
                 }
+
+                $rootScope.$on('$stateChangeStart', function (event, toState) {
+                    if (toState.name != $attr.stateName) {
+                        tiNavBarDelegate.resetNavBar();
+                    }
+                });
+
+                $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+                    if (toState.name == $attr.stateName) {
+                        setOpacityToNavBar();
+                    }
+                });
             }
         }
     })
-    .factory('tiNavBarDelegate', function ($document) {
-        var navbars = angular.element($document[0].body.querySelectorAll('ion-header-bar.ti-transparent'));
+    .service('tiNavBarDelegate', function ($document) {
+        var navbars = $document[0].body.querySelectorAll('.nav-bar-block ion-header-bar');
         return {
             makeNavBarTransparent: function () {
                 for (var i = 0; i < navbars.length; i++) {
                     var header = angular.element(navbars[i]);
-                    //header.css({borderColor: 'rgba(255, 0, 0, 0)', backgroundColor: 'rgba(255, 0, 0, 0)'})
                     header.css({borderColor: 'transparent', backgroundColor: 'transparent'})
                 }
             },

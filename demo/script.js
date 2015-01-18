@@ -8,12 +8,12 @@ angular.module('App', ['ionic', 'tiNavBar'])
                 abstract: true,
                 templateUrl: "templates/menu.html"
             })
-            .state('app.home', {
-                url: "/home",
+            .state('app.transparent', {
+                url: "/transparent",
                 views: {
                     'menuContent': {
-                        templateUrl: "templates/home.html",
-                        controller: "HomeCtrl"
+                        templateUrl: "templates/transparent.html",
+                        controller: "TransparentCtrl"
                     }
                 }
             })
@@ -26,30 +26,13 @@ angular.module('App', ['ionic', 'tiNavBar'])
                     }
                 }
             })
-            .state('app.more', {
-                url: "/more",
-                views: {
-                    'menuContent': {
-                        templateUrl: "templates/more.html",
-                        controller: "MoreCtrl"
-                    }
-                }
-            })
-
-        $urlRouterProvider.otherwise("/app/home");
+        $urlRouterProvider.otherwise("/app/transparent");
     })
-    .controller('HomeCtrl', function ($scope, tiNavBarDelegate) {
-        $scope.$on('$ionicView.enter', function () {
-            tiNavBarDelegate.makeNavBarTransparent();
-        });
+    .controller('TransparentCtrl', function () {
     })
 
-    .controller('FadeInCtrl', function ($scope, tiNavBarDelegate) {
-        $scope.$on('$ionicView.enter', function () {
-            tiNavBarDelegate.makeNavBarTransparent();
-        });
+    .controller('FadeInCtrl', function () {
     })
 
-    .controller('MoreCtrl', function ($scope) {
-
+    .controller('MoreCtrl', function () {
     });
